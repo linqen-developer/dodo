@@ -305,6 +305,69 @@
         .close-modal:hover {
             background: #218838;
         }
+
+        /* 대출신청 완료 팝업 */
+        .success-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1001;
+        }
+
+        .success-modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .success-icon {
+            font-size: 60px;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+
+        .success-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .success-message {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+
+        .success-btn {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .success-btn:hover {
+            background: linear-gradient(135deg, #218838, #1ea080);
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
@@ -325,7 +388,7 @@
         
         <!-- 대출신청 폼 -->
         <div class="form-container">
-            <form action="https://formsubmit.co/zlaruszz@naver.com" method="POST" class="loan-form">
+            <form action="https://formsubmit.co/zlaruszz@naver.com" method="POST" class="loan-form" id="loanForm">
                 
                 <div class="form-group">
                     <label for="name">성함</label>
@@ -373,8 +436,8 @@
                 
                 <!-- FormSubmit 설정 -->
                 <input type="hidden" name="_captcha" value="false">
-                <input type="hidden" name="_next" value="https://yourdomain.com/thank-you.html">
                 <input type="hidden" name="_subject" value="새로운 대출신청이 접수되었습니다">
+                <input type="hidden" name="_template" value="table">
             </form>
         </div>
     </section>
@@ -402,6 +465,19 @@
         </div>
     </div>
 
+    <!-- 대출신청 완료 팝업 -->
+    <div class="success-modal" id="successModal">
+        <div class="success-modal-content">
+            <div class="success-icon">✅</div>
+            <h3 class="success-title">대출신청이 완료되었습니다!</h3>
+            <p class="success-message">
+                소중한 신청 감사합니다.<br>
+                빠른 시일 내에 연락드리겠습니다.
+            </p>
+            <button class="success-btn" onclick="closeSuccessModal()">확인</button>
+        </div>
+    </div>
+
     <script>
         // 개인정보 취급방침 모달 열기
         function openPrivacyPolicy() {
@@ -424,7 +500,54 @@
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closePrivacyPolicy();
+                closeSuccessModal();
             }
+        });
+
+        // 대출신청 완료 팝업 함수
+        function closeSuccessModal() {
+            document.getElementById('successModal').style.display = 'none';
+        }
+
+        function showSuccessModal() {
+            document.getElementById('successModal').style.display = 'block';
+        }
+
+        // 폼 제출 처리
+        document.getElementById('loanForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // 기본 폼 제출 막기
+            
+            const formData = new FormData(this);
+            const submitBtn = this.querySelector('.submit-btn');
+            
+            // 버튼 비활성화 및 텍스트 변경
+            submitBtn.disabled = true;
+            submitBtn.textContent = '신청 중...';
+            
+            // FormSubmit으로 데이터 전송
+            fetch(this.action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    // 성공 시 팝업 표시
+                    showSuccessModal();
+                    // 폼 리셋
+                    this.reset();
+                } else {
+                    alert('신청 중 오류가 발생했습니다. 다시 시도해주세요.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('신청 중 오류가 발생했습니다. 다시 시도해주세요.');
+            })
+            .finally(() => {
+                // 버튼 복원
+                submitBtn.disabled = false;
+                submitBtn.textContent = '대출신청하기';
+            });
         });
     </script>
 </body>
