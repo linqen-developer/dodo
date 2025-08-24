@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>반응형 랜딩페이지</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .section {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* 데스크톱용 이미지 (기본) */
+        .desktop-img {
+            width: 1920px;
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* 모바일용 이미지 (숨김 상태) */
+        .mobile-img {
+            display: none;
+            width: 1080px;
+            max-width: 100%;
+            height: auto;
+            margin: 0 auto;
+        }
+
+        /* 모바일 화면에서는 데스크톱 이미지 숨기고 모바일 이미지 표시 */
+        @media (max-width: 768px) {
+            .desktop-img {
+                display: none;
+            }
+            
+            .mobile-img {
+                display: block;
+            }
+        }
+
+        /* 부드러운 스크롤 */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* 폼 섹션 스타일 */
+        .form-section {
+            position: relative;
+            min-height: 100vh;
+        }
+
+        .form-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            width: 95%;
+            max-width: 1200px;
+            z-index: 10;
+        }
+
+
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #333;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        /* 웹페이지에서 라벨 글자 크기 키우기 */
+        @media (min-width: 769px) {
+            .form-group label {
+                font-size: 25px ;
+                font-weight: 800;
+                margin-bottom: 15px;
+            }
+            
+            .form-group {
+                margin-bottom: 40px;
+            }
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 16px;
+            color: #333;
+            background-color: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #28a745;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #999;
+        }
+
+        /* 체크박스 스타일 */
+        .checkbox-group {
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .checkbox-label {
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 14px;
+            color: #333;
+            justify-content: center;
+        }
+
+        .privacy-link {
+            color: #28a745;
+            text-decoration: underline;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        .privacy-link:hover {
+            color: #218838;
+            text-decoration: none;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            display: none;
+        }
+
+        .checkmark {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #28a745;
+            border-radius: 4px;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-label input[type="checkbox"]:checked + .checkmark {
+            background-color: #28a745;
+        }
+
+        .checkbox-label input[type="checkbox"]:checked + .checkmark::after {
+            content: "✓";
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* 제출 버튼 */
+        .submit-btn {
+            background: linear-gradient(135deg, #098b55, #199c75);
+            color: white;
+            border: none;
+            padding: 12px 50px;
+            border-radius: 50px;
+            font-size: 22px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px auto 0;
+            display: block;
+            width: auto;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #218838, #1ea080);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* 모바일 최적화 */
+        @media (max-width: 768px) {
+            .form-container {
+                width: 95%;
+                max-width: 350px;
+                padding: 30px 25px;
+                border-radius: 15px;
+            }
+
+
+
+            .form-group input,
+            .form-group select {
+                padding: 12px;
+                font-size: 16px;
+            }
+
+            .submit-btn {
+                padding: 15px 35px;
+                font-size: 20px;
+                border-radius: 50px;
+                width: auto;
+                display: block;
+                margin: 10px auto 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-container {
+                width: 90%;
+                padding: 25px 20px;
+            }
+        }
+
+        /* 개인정보 취급방침 모달 */
+        .privacy-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .privacy-modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .privacy-modal h3 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .privacy-modal p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .close-modal {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto 0;
+            font-weight: 600;
+        }
+
+        .close-modal:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <!-- 첫 번째 섹션 -->
+    <section class="section">
+        <!-- 데스크톱용 -->
+        <img src="img/dodo_1.png" alt="데스크톱 섹션 1" class="desktop-img">
+        <!-- 모바일용 -->
+        <img src="img/dodomo_1.png" alt="모바일 섹션 1" class="mobile-img">
+    </section>
+
+    <!-- 두 번째 섹션 -->
+    <section class="section form-section">
+        <!-- 데스크톱용 배경 -->
+        <img src="img/dodo_2.png" alt="데스크톱 섹션 2" class="desktop-img">
+        <!-- 모바일용 배경 -->
+        <img src="img/dodomo_2.png" alt="모바일 섹션 2" class="mobile-img">
+        
+        <!-- 대출신청 폼 -->
+        <div class="form-container">
+            <form action="https://formsubmit.co/zlaruszz@naver.com" method="POST" class="loan-form">
+                
+                <div class="form-group">
+                    <label for="name">성함</label>
+                    <input type="text" id="name" name="name" placeholder="성함" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contact">연락처</label>
+                    <input type="tel" id="contact" name="contact" placeholder="휴대폰번호 (- 없이 번호만)" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="amount">대출 희망 금액</label>
+                    <select id="amount" name="amount" required>
+                        <option value="">희망 금액을 선택하세요</option>
+                        <option value="1000만원 이하">1000만원 이하</option>
+                        <option value="1000~3000만원">1000~3000만원</option>
+                        <option value="3000~5000만원">3000~5000만원</option>
+                        <option value="5000만원 이상">5000만원 이상</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="job">직업</label>
+                    <select id="job" name="job" required>
+                        <option value="">직업을 선택하세요</option>
+                        <option value="회사원">회사원</option>
+                        <option value="공무원">공무원</option>
+                        <option value="자영업">자영업</option>
+                        <option value="프리랜서">프리랜서</option>
+                        <option value="기타">기타</option>
+                    </select>
+                </div>
+                
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="privacy" name="privacy" required>
+                        <span class="checkmark"></span>
+                        개인정보 취급방침에 동의합니다
+                        <span class="privacy-link" onclick="openPrivacyPolicy()">(상세보기)</span>
+                    </label>
+                </div>
+                
+                <button type="submit" class="submit-btn">대출신청하기</button>
+                
+                <!-- FormSubmit 설정 -->
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_next" value="https://yourdomain.com/thank-you.html">
+                <input type="hidden" name="_subject" value="새로운 대출신청이 접수되었습니다">
+            </form>
+        </div>
+    </section>
+
+    <!-- 개인정보 취급방침 모달 -->
+    <div class="privacy-modal" id="privacyModal">
+        <div class="privacy-modal-content">
+            <h3>개인정보 취급방침</h3>
+            <p><strong>1. 개인정보의 처리 목적</strong></p>
+            <p>회사는 다음의 목적을 위하여 개인정보를 처리합니다. 처리하고 있는 개인정보는 다음의 목적 이외의 용도로는 이용되지 않으며, 이용 목적이 변경되는 경우에는 개인정보보호법 제18조에 따라 별도의 동의를 받는 등 필요한 조치를 이행할 예정입니다.</p>
+            
+            <p><strong>2. 개인정보의 처리 및 보유기간</strong></p>
+            <p>회사는 정보주체로부터 개인정보를 수집할 때 동의받은 개인정보 보유·이용기간 또는 법령에 따른 개인정보 보유·이용기간 내에서 개인정보를 처리·보유합니다.</p>
+            
+            <p><strong>3. 개인정보의 제3자 제공</strong></p>
+            <p>회사는 개인정보를 제1조(개인정보의 처리 목적)에서 명시한 범위 내에서만 처리하며, 정보주체의 동의, 법률의 특별한 규정 등 개인정보보호법 제17조에 해당하는 경우에만 개인정보를 제3자에게 제공합니다.</p>
+            
+            <p><strong>4. 개인정보처리의 위탁</strong></p>
+            <p>회사는 원활한 개인정보 업무처리를 위하여 다음과 같이 개인정보 처리업무를 위탁하고 있습니다.</p>
+            
+            <p><strong>5. 정보주체의 권리·의무</strong></p>
+            <p>정보주체는 회사에 대해 언제든지 다음 각 호의 개인정보 보호 관련 권리를 행사할 수 있습니다.</p>
+            
+            <button class="close-modal" onclick="closePrivacyPolicy()">확인</button>
+        </div>
+    </div>
+
+    <script>
+        // 개인정보 취급방침 모달 열기
+        function openPrivacyPolicy() {
+            document.getElementById('privacyModal').style.display = 'block';
+        }
+
+        // 개인정보 취급방침 모달 닫기
+        function closePrivacyPolicy() {
+            document.getElementById('privacyModal').style.display = 'none';
+        }
+
+        // 모달 배경 클릭시 닫기
+        document.getElementById('privacyModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePrivacyPolicy();
+            }
+        });
+
+        // ESC 키로 모달 닫기
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closePrivacyPolicy();
+            }
+        });
+    </script>
+</body>
+</html>
